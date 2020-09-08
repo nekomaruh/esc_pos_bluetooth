@@ -21,11 +21,13 @@ class PrinterBluetooth {
   String get name => _device.name;
   String get address => _device.address;
   int get type => _device.type;
+  bool get connected => _device.connected;
 }
 
 /// Printer Bluetooth Manager
 class PrinterBluetoothManager {
   BluetoothManager _bluetoothManager = BluetoothManager.instance;
+  Future<bool> get isConnected => _bluetoothManager.isConnected;
   bool _isPrinting = false;
   bool _isConnected = false;
   StreamSubscription _scanResultsSubscription;
@@ -138,7 +140,7 @@ class PrinterBluetoothManager {
   }
 
   Future<void> test() async {
-    await Future.delayed(Duration(seconds:2));
+    await Future.delayed(Duration(seconds: 2));
     await _bluetoothManager.disconnect();
     _isPrinting = false;
     return null;
