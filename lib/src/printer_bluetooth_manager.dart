@@ -25,7 +25,7 @@ class PrinterBluetooth {
 
 /// Printer Bluetooth Manager
 class PrinterBluetoothManager {
-  final BluetoothManager _bluetoothManager = BluetoothManager.instance;
+  BluetoothManager _bluetoothManager = BluetoothManager.instance;
   bool _isPrinting = false;
   bool _isConnected = false;
   StreamSubscription _scanResultsSubscription;
@@ -83,14 +83,12 @@ class PrinterBluetoothManager {
       return Future<PosPrintResult>.value(PosPrintResult.printerNotSelected);
     } else if (_isScanning.value) {
       return Future<PosPrintResult>.value(PosPrintResult.scanInProgress);
-    } else if (_isPrinting) {
-      return Future<PosPrintResult>.value(PosPrintResult.printInProgress);
     }
 
     _isPrinting = true;
 
     // We have to rescan before connecting, otherwise we can connect only once
-    await _bluetoothManager.startScan(timeout: Duration(seconds: 1));
+    await _bluetoothManager.startScan(timeout: Duration(seconds: 5));
     await _bluetoothManager.stopScan();
 
     // Connect
@@ -117,10 +115,7 @@ class PrinterBluetoothManager {
             completer.complete(PosPrintResult.success);
           }
           // TODO sending disconnect signal should be event-based
-          _runDelayed(3).then((dynamic v) async {
-            await _bluetoothManager.disconnect();
-            _isPrinting = false;
-          });
+
           _isConnected = true;
           break;
         case BluetoothManager.DISCONNECTED:
@@ -140,6 +135,13 @@ class PrinterBluetoothManager {
     });
 
     return completer.future;
+  }
+
+  Future<void> test() async {
+    await Future.delayed(Duration(seconds:2));
+    await _bluetoothManager.disconnect();
+    _isPrinting = false;
+    return null;
   }
 
   Future<PosPrintResult> printTicket(
