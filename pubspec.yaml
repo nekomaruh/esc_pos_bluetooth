@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   rxdart: ^0.23.1
-  esc_pos_utils: ^0.3.6
+  esc_pos_utils: ^0.4.9
   # esc_pos_utils:
     # path: ../esc_pos_utils
   flutter_bluetooth_basic: ^0.1.5
