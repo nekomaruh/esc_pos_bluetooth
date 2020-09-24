@@ -86,17 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _testPrint(PrinterBluetooth printer) async {
     print('before ******* print');
     await printerManager.selectPrinter(printer);
-    // bool isConnected = await printerManager.isConnected;
-
-    // if (!isConnected && tryTime < 3) {
-    //   print('TRY _______$tryTime time');
-    //   tryTime++;
-    //   _testPrint(printer);
-    //   return;
-    // }
-
-    await Future.delayed(Duration(milliseconds: 500));
-
+    
     // TODO Don't forget to choose printer's paper
     const PaperSize paper = PaperSize.mm80;
 

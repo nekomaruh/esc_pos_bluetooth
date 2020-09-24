@@ -72,6 +72,7 @@ class PrinterBluetoothManager {
     // Connect
     await _bluetoothManager.connect(_selectedPrinter._device);
     _isConnected = await _bluetoothManager.isConnected;
+    await Future.delayed(Duration(milliseconds: 500));
   }
 
   Future<PosPrintResult> writeBytes(
