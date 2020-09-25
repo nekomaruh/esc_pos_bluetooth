@@ -127,8 +127,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text(_devices[index].name ?? ''),
-                              Text(_devices[index].address),
+                              Text(_devices[index].device.name ?? ''),
+                              Text(_devices[index].device.address),
                               Text(
                                 'Click to print a test receipt',
                                 style: TextStyle(color: Colors.grey[700]),

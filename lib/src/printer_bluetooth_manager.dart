@@ -15,20 +15,20 @@ import './enums.dart';
 
 /// Bluetooth printer
 class PrinterBluetooth {
-  PrinterBluetooth(this._device);
-  final BluetoothDevice _device;
+  PrinterBluetooth(this.device);
+  final BluetoothDevice device;
 
-  String get name => _device.name;
-  String get address => _device.address;
-  int get type => _device.type;
-  bool get connected => _device.connected;
+  // String get name => device.name;
+  // String get address => device.address;
+  // int get type => device.type;
+  // bool get connected => device.connected;
 }
 
 /// Printer Bluetooth Manager
 class PrinterBluetoothManager {
   BluetoothManager _bluetoothManager = BluetoothManager.instance;
   Future<bool> get isConnected => _bluetoothManager.isConnected;
-  bool _isConnected = false;
+  // bool _isConnected = false;
   StreamSubscription _scanResultsSubscription;
   StreamSubscription _isScanningSubscription;
   PrinterBluetooth _selectedPrinter;
@@ -70,8 +70,8 @@ class PrinterBluetoothManager {
     _selectedPrinter = printer;
 
     // Connect
-    await _bluetoothManager.connect(_selectedPrinter._device);
-    _isConnected = await _bluetoothManager.isConnected;
+    await _bluetoothManager.connect(_selectedPrinter.device);
+    // _isConnected = await _bluetoothManager.isConnected;
     await Future.delayed(Duration(milliseconds: 500));
   }
 
@@ -93,18 +93,18 @@ class PrinterBluetoothManager {
     // await _bluetoothManager.stopScan();
 
     // Subscribe to the events
-    _bluetoothManager.state.listen((state) async {
-      print('_bluetoothManager state -> ${state.toString()}');
-      switch (state) {
-        case BluetoothManager.CONNECTED:
-          break;
-        case BluetoothManager.DISCONNECTED:
-          _isConnected = false;
-          break;
-        default:
-          break;
-      }
-    });
+    // _bluetoothManager.state.listen((state) async {
+    //   print('_bluetoothManager state -> ${state.toString()}');
+    //   switch (state) {
+    //     case BluetoothManager.CONNECTED:
+    //       break;
+    //     case BluetoothManager.DISCONNECTED:
+    //       // _isConnected = false;
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // });
 
     final len = bytes.length;
     List<List<int>> chunks = [];
