@@ -26,8 +26,8 @@ class PrinterBluetooth {
 
 /// Printer Bluetooth Manager
 class PrinterBluetoothManager {
-  BluetoothManager _bluetoothManager = BluetoothManager.instance;
-  Future<bool> get isConnected => _bluetoothManager.isConnected;
+  BluetoothManager bluetoothManager = BluetoothManager.instance;
+  Future<bool> get isConnected => bluetoothManager.isConnected;
   // bool _isConnected = false;
   StreamSubscription _scanResultsSubscription;
   StreamSubscription _isScanningSubscription;
@@ -40,17 +40,14 @@ class PrinterBluetoothManager {
       BehaviorSubject.seeded([]);
   Stream<List<PrinterBluetooth>> get scanResults => _scanResults.stream;
 
-  void startScan(Duration timeout) async {
+  Future startScan(Duration timeout) async {
     _scanResults.add(<PrinterBluetooth>[]);
-
-    _bluetoothManager.startScan(timeout: timeout);
-
-    _scanResultsSubscription = _bluetoothManager.scanResults.listen((devices) {
+    _scanResultsSubscription = bluetoothManager.scanResults.listen((devices) {
       _scanResults.add(devices.map((d) => PrinterBluetooth(d)).toList());
     });
 
     _isScanningSubscription =
-        _bluetoothManager.isScanning.listen((isScanningCurrent) async {
+        bluetoothManager.isScanning.listen((isScanningCurrent) async {
       // If isScanning value changed (scan just stopped)
       if (_isScanning.value && !isScanningCurrent) {
         _scanResultsSubscription.cancel();
@@ -58,21 +55,27 @@ class PrinterBluetoothManager {
       }
       _isScanning.add(isScanningCurrent);
     });
+
+    await bluetoothManager.startScan(timeout: timeout).catchError((e) {
+      throw new Exception(e.message);
+    });
+
   }
 
   void stopScan() async {
-    await _bluetoothManager.stopScan();
+    await bluetoothManager.stopScan();
   }
 
-  Future selectPrinter(PrinterBluetooth printer) async {
+  Future<bool> selectPrinter(PrinterBluetooth printer) async {
     // await _bluetoothManager.disconnect();
-
     _selectedPrinter = printer;
 
     // Connect
-    await _bluetoothManager.connect(_selectedPrinter.device);
+    await bluetoothManager.connect(_selectedPrinter.device);
     // _isConnected = await _bluetoothManager.isConnected;
     await Future.delayed(Duration(milliseconds: 500));
+
+    return await bluetoothManager.isConnected;
   }
 
   Future<PosPrintResult> writeBytes(
@@ -114,7 +117,7 @@ class PrinterBluetoothManager {
     }
 
     for (var i = 0; i < chunks.length; i += 1) {
-      await _bluetoothManager.writeData(chunks[i]);
+      await bluetoothManager.writeData(chunks[i]);
       sleep(Duration(milliseconds: queueSleepTimeMs));
     }
 

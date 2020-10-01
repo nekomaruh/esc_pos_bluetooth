@@ -48,7 +48,10 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _devices = [];
     });
-    printerManager.startScan(Duration(seconds: 4));
+    
+    printerManager.startScan(Duration(seconds: 4)).catchError((e) {
+      print('startScan error -> ${e.message}');
+    });
   }
 
   void _stopScanDevices() {
@@ -86,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _testPrint(PrinterBluetooth printer) async {
     print('before ******* print');
     await printerManager.selectPrinter(printer);
-    
+
     // TODO Don't forget to choose printer's paper
     const PaperSize paper = PaperSize.mm80;
 
@@ -148,18 +151,18 @@ class _MyHomePageState extends State<MyHomePage> {
         stream: printerManager.isScanningStream,
         initialData: false,
         builder: (c, snapshot) {
-          if (snapshot.data) {
-            return FloatingActionButton(
-              child: Icon(Icons.stop),
-              onPressed: _stopScanDevices,
-              backgroundColor: Colors.red,
-            );
-          } else {
-            return FloatingActionButton(
-              child: Icon(Icons.search),
-              onPressed: _startScanDevices,
-            );
-          }
+          // if (snapshot.data) {
+          //   return FloatingActionButton(
+          //     child: Icon(Icons.stop),
+          //     onPressed: _stopScanDevices,
+          //     backgroundColor: Colors.red,
+          //   );
+          // } else {
+          return FloatingActionButton(
+            child: Icon(Icons.search),
+            onPressed: _startScanDevices,
+          );
+          // }
         },
       ),
     );
